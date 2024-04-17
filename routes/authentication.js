@@ -1,11 +1,11 @@
 require('dotenv').config();
 const router = require('express').Router();
 const bcrypt = require('bcrypt')
-const { register, getPw } = require('../database/auth_db')
+const { registerUser, getPw, registerStudent } = require('../database/auth_db')
 const jwt = require('jsonwebtoken')
 
 
-router.post('/register', async (req, res) => {
+router.post('/student/register', async (req, res) => {
   const fname = req.body.fname;
   const lname = req.body.lname;
   const username = req.body.username;
@@ -14,7 +14,22 @@ router.post('/register', async (req, res) => {
 
   const hashPw = await bcrypt.hash(pw, 10);
 
-  await register(fname, lname, username, hashPw);
+  await registerStudent(fname, lname, username, hashPw);
+  res.end();
+
+});
+
+router.post('/user/register', async (req, res) => {
+  const firstName = req.body.firstName;
+  const lastName = req.body.lastName;
+  const userName = req.body.userName;
+  const password = req.body.password;
+  const email = req.body.email;
+
+
+  const hashPw = await bcrypt.hash(password, 10);
+
+  await registerUser(firstName, lastName, userName, hashPw, email);
   res.end();
 
 });

@@ -1,4 +1,5 @@
 const { getStudents, getStudent, addNote } = require('../database/studentDB');
+const { auth } = require('../middleware/auth');
 
 const router = require('express').Router();
 
@@ -13,9 +14,9 @@ router.get('/', async (req, res) => {
     res.json(student);
 })
 
-router.post('/note', async (req, res) => {
+router.post('/note', auth, async (req, res) => {
     try {
-        await addNote(req.body.username, req.body.msg);
+        await addNote(res.locals.username, req.body.msg);
         res.end();
     } catch(err) {
         res.status(404).json({error: err.message});
